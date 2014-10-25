@@ -28,7 +28,11 @@ IF %ERRORLEVEL% NEQ 0 (
 
 setlocal enabledelayedexpansion
 
-SET ARTIFACTS=%~dp0%..\artifacts
+IF NOT DEFINED KUDU_APPPATH (
+  SET ARTIFACTS=%~dp0%..\artifacts
+) ELSE (
+  SET ARTIFACTS=%KUDU_APPPATH%\..\artifacts
+)
 
 SET ARTIFACTS_OUT=%ARTIFACTS%\publish
 
@@ -39,7 +43,7 @@ IF NOT DEFINED DEPLOYMENT_SOURCE (
 IF NOT DEFINED DEPLOYMENT_TARGET (
   SET DEPLOYMENT_TARGET=%ARTIFACTS%\output
 )
-
+SET
 FOR /F %%i IN ("%DEPLOYMENT_TARGET%") DO IF "%%~nxi"=="wwwroot" (
   SET DEPLOYMENT_TARGET=%%~dpi
 )
