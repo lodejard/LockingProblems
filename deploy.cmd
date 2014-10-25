@@ -2,6 +2,7 @@
 SET DEPLOYMENT_SOURCE=%~dp0%WebApplication1
 :: Assumption - the latest kudusync with the file-move-delete logic will be on the server?
 SET KUDU_SYNC_CMD=%~dp0%build\kudusync.cmd
+SET
 :: -- cut mark -- ::
 
 @if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
