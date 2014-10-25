@@ -3,7 +3,7 @@ SET DEPLOYMENT_SOURCE=%~dp0%WebApplication1
 :: Assumption - the latest kudusync with the file-move-delete logic will be on the server?
 SET KUDU_SYNC_CMD=%~dp0%build\kudusync.cmd
 :: -- cut mark -- ::
-RMDIR /S /Q %USERPROFILE%/.kpm
+
 @if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
 
 :: ----------------------
@@ -81,19 +81,19 @@ echo Handling Basic ASP.NET 5 Web Application deployment.
 
 :: 1. Download KRE
 CALL  kvm install %KRE_VERSION% -x86 -runtime CLR %KVM_INSTALL_OPTIONS%
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Restore and pack
-PUSHD %DEPLOYMENT_SOURCE%
-CALL  kpm restore %KPM_RESTORE_OPTIONS%
+CALL  kpm restore %DEPLOYMENT_SOURCE% %KPM_RESTORE_OPTIONS%
+IF !ERRORLEVEL! NEQ 0 goto error
+
 RMDIR /S /Q "%ARTIFACTS_OUT%"
-CALL  kpm pack --out "%ARTIFACTS_OUT%" --runtime %USERPROFILE%\.kre\packages\KRE-CLR-x86.%KRE_VERSION% %KPM_PACK_OPTIONS%
-POPD
+CALL  kpm pack %DEPLOYMENT_SOURCE% --out "%ARTIFACTS_OUT%" --runtime %USERPROFILE%\.kre\packages\KRE-CLR-x86.%KRE_VERSION% %KPM_PACK_OPTIONS%
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. KuduSync
-IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  CALL :ExecuteCmd "%KUDU_SYNC_CMD%" -v 5000 -f "%ARTIFACTS_OUT%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%"
-  IF !ERRORLEVEL! NEQ 0 goto error
-)
+CALL :ExecuteCmd "%KUDU_SYNC_CMD%" -v 5000 -f "%ARTIFACTS_OUT%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%"
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 4. Request homepage
 IF "%WEBSITE_HOSTNAME%" NEQ "" (
