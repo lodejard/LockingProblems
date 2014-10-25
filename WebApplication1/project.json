@@ -1,0 +1,10 @@
+﻿{
+    "webroot": "wwwroot",
+    "exclude": "wwwroot/**/*",
+    "dependencies": {
+        "Microsoft.AspNet.Server.IIS": "1.0.0-beta1-10445"
+    },
+    "frameworks" : {
+        "aspnet50" : { }
+    }
+}

@@ -1,0 +1,16 @@
+
+artifacts
+packages
+obj
+bin
+node_modules
+bower_components
+
+*.suo
+*.user
+*.sln.ide
+
+$tf
+*.vssscc
+*.vspscc
+.tfignore
