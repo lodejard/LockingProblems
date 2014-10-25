@@ -2,7 +2,7 @@
 SET DEPLOYMENT_SOURCE=%~dp0%WebApplication1
 :: Assumption - the latest kudusync with the file-move-delete logic will be on the server?
 SET KUDU_SYNC_CMD=%~dp0%build\kudusync.cmd
-SET
+
 :: -- cut mark -- ::
 
 @if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
@@ -27,10 +27,10 @@ IF %ERRORLEVEL% NEQ 0 (
 
 setlocal enabledelayedexpansion
 
-IF NOT DEFINED KUDU_APPPATH (
+IF NOT DEFINED DEPLOYMENT_TEMP (
   SET ARTIFACTS=%~dp0%..\artifacts
 ) ELSE (
-  SET ARTIFACTS=%KUDU_APPPATH%\..\artifacts
+  SET ARTIFACTS=%HOMEDRIVE%%HOMEPATH%\artifacts
 )
 
 SET ARTIFACTS_OUT=%ARTIFACTS%\publish
@@ -51,14 +51,14 @@ IF NOT DEFINED NEXT_MANIFEST_PATH (
   )
 )
 
-FOR /F %%i IN ("%DEPLOYMENT_TARGET%") DO IF "%%~nxi"=="wwwroot" (
-  SET DEPLOYMENT_TARGET=%%~dpi
+IF "%DEPLOYMENT_TARGET%" == "%WEBROOT_PATH%" (
+  FOR /F %%i IN ("%DEPLOYMENT_TARGET%") DO IF "%%~nxi"=="wwwroot" (
+    SET DEPLOYMENT_TARGET=%%~dpi
+  )
 )
-
 IF "%DEPLOYMENT_TARGET:~-1%"=="\" (
   SET DEPLOYMENT_TARGET=%DEPLOYMENT_TARGET:~0,-1%
 )
-
 
 IF NOT DEFINED KUDU_SYNC_CMD (
   :: Install kudu sync
