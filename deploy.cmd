@@ -1,5 +1,3 @@
-:: Assumption - latest stable will be an env var? user can change it on antares panel?
-SET KRE_VERSION=1.0.0-beta2-10614
 :: Assumption - kudu will detect web app and set this to the correct subfolder?
 SET DEPLOYMENT_SOURCE=%~dp0%WebApplication1
 :: Assumption - the latest kudusync with the file-move-delete logic will be on the server?
@@ -69,6 +67,10 @@ IF NOT DEFINED KUDU_SYNC_CMD (
 
   :: Locally just running "kuduSync" would also work
   SET KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd
+)
+
+IF NOT DEFINED KRE_VERSION (
+  SET KRE_VERSION=1.0.0-beta2-10614
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
