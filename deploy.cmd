@@ -51,11 +51,14 @@ IF NOT DEFINED NEXT_MANIFEST_PATH (
   )
 )
 
+:: Remove wwwroot if deploying to default location
 IF "%DEPLOYMENT_TARGET%" == "%WEBROOT_PATH%" (
   FOR /F %%i IN ("%DEPLOYMENT_TARGET%") DO IF "%%~nxi"=="wwwroot" (
     SET DEPLOYMENT_TARGET=%%~dpi
   )
 )
+
+:: Remove trailing slash if present
 IF "%DEPLOYMENT_TARGET:~-1%"=="\" (
   SET DEPLOYMENT_TARGET=%DEPLOYMENT_TARGET:~0,-1%
 )
