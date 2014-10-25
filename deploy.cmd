@@ -70,6 +70,7 @@ CALL  kvm install %KRE_VERSION% -x86 -runtime CLR %KVM_INSTALL_OPTIONS%
 :: 2. Restore and pack
 PUSHD %DEPLOYMENT_SOURCE%
 CALL  kpm restore %KPM_RESTORE_OPTIONS%
+RMDIR /S /Q "%ARTIFACTS_OUT%"
 CALL  kpm pack --out "%ARTIFACTS_OUT%" --runtime %USERPROFILE%\.kre\packages\KRE-CLR-x86.%KRE_VERSION% %KPM_PACK_OPTIONS%
 POPD
 
