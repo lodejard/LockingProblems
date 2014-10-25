@@ -1,6 +1,6 @@
 ﻿{
     "webroot": "wwwroot",
-    "exclude": "wwwroot/**/*",
+    "exclude": "wwwroot",
     "dependencies": {
         "Microsoft.AspNet.Server.IIS": "1.0.0-beta1-*"
     },
