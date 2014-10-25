@@ -37,7 +37,15 @@ IF NOT DEFINED DEPLOYMENT_SOURCE (
 )
 
 IF NOT DEFINED DEPLOYMENT_TARGET (
-  SET DEPLOYMENT_TARGET=%ARTIFACTS%\wwwroot
+  SET DEPLOYMENT_TARGET=%ARTIFACTS%\output
+)
+
+FOR /F %%i IN ("%DEPLOYMENT_TARGET%") DO IF "%%~nxi"=="wwwroot" (
+  SET DEPLOYMENT_TARGET=%%~dpi
+)
+
+IF "%DEPLOYMENT_TARGET:~-1%"=="\" (
+  SET DEPLOYMENT_TARGET=%DEPLOYMENT_TARGET:~0,-1%
 )
 
 IF NOT DEFINED NEXT_MANIFEST_PATH (
@@ -47,6 +55,7 @@ IF NOT DEFINED NEXT_MANIFEST_PATH (
     SET PREVIOUS_MANIFEST_PATH=%ARTIFACTS%\manifest
   )
 )
+
 
 IF NOT DEFINED KUDU_SYNC_CMD (
   :: Install kudu sync
@@ -82,7 +91,10 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 
 :: 4. Request homepage
 IF "%WEBSITE_HOSTNAME%" NEQ "" (
+  echo ==== http://%WEBSITE_HOSTNAME% ====
   curl --silent --show-error http://%WEBSITE_HOSTNAME% 
+  echo.
+  echo ========
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
