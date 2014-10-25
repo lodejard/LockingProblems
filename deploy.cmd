@@ -83,19 +83,20 @@ echo Handling Basic ASP.NET 5 Web Application deployment.
 CALL  kvm install %KRE_VERSION% -x86 -runtime CLR %KVM_INSTALL_OPTIONS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 2. Restore and pack
+:: 2. Restore dependencies
 CALL  kpm restore %DEPLOYMENT_SOURCE% %KPM_RESTORE_OPTIONS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
+:: 3. Package web application
 RMDIR /S /Q "%ARTIFACTS_OUT%"
 CALL  kpm pack %DEPLOYMENT_SOURCE% --out "%ARTIFACTS_OUT%" --runtime %USERPROFILE%\.kre\packages\KRE-CLR-x86.%KRE_VERSION% %KPM_PACK_OPTIONS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 3. KuduSync
+:: 4. KuduSync
 CALL :ExecuteCmd "%KUDU_SYNC_CMD%" -v 5000 -f "%ARTIFACTS_OUT%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%"
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 4. Request homepage
+:: 5. Request homepage
 IF "%WEBSITE_HOSTNAME%" NEQ "" (
   echo ==== http://%WEBSITE_HOSTNAME% ====
   curl --silent --show-error http://%WEBSITE_HOSTNAME% 
